@@ -12,11 +12,10 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 import vodja.Vodja;
-
 import logika.Igra;
 import logika.Polje;
 import logika.Vrsta;
-//import logika.Koordinati;
+import logika.Koordinati;
 import splosno.Poteza;
 
 /**
@@ -26,7 +25,7 @@ import splosno.Poteza;
 public class IgralnoPolje extends JPanel implements MouseListener {
 	
 	public IgralnoPolje() {
-		setBackground(Color.WHITE);
+		setBackground(new Color(51,128,255));
 		this.addMouseListener(this);
 		
 	}
@@ -42,7 +41,7 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 	
 	// Širina enega kvadratka
 	private double squareWidth() {
-		return Math.min(getWidth(), getHeight()) / (Igra.N+2);
+		return Math.min(getWidth(), getHeight()) / (Igra.N+1);
 	}
 	
 	// Relativni prostor okoli X in O
@@ -57,13 +56,12 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 	 */
 	private void paintX(Graphics2D g2, int i, int j) {
 		double w = squareWidth();
-		double r = w * (1.0 - LINE_WIDTH - 2.0 * PADDING); // sirina X
+		double d = w * (1.0 - LINE_WIDTH - 2.0 * PADDING); // premer O
 		double x = w * (i + 0.5 + 0.5 * LINE_WIDTH + PADDING);
 		double y = w * (j + 0.5 + 0.5 * LINE_WIDTH + PADDING);
-		g2.setColor(Color.BLUE);
+		g2.setColor(Color.WHITE);
 		g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
-		g2.drawLine((int)x, (int)y, (int)(x + r), (int)(y + r));
-		g2.drawLine((int)(x + r), (int)y, (int)x, (int)(y + r));
+		g2.fillOval((int)x, (int)y, (int)d , (int)d);
 	}
 	
 	/**
@@ -77,9 +75,9 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 		double d = w * (1.0 - LINE_WIDTH - 2.0 * PADDING); // premer O
 		double x = w * (i + 0.5 + 0.5 * LINE_WIDTH + PADDING);
 		double y = w * (j + 0.5 + 0.5 * LINE_WIDTH + PADDING);
-		g2.setColor(Color.RED);
+		g2.setColor(Color.BLACK);
 		g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
-		g2.drawOval((int)x, (int)y, (int)d , (int)d);
+		g2.fillOval((int)x, (int)y, (int)d , (int)d);
 	}
 	
 	@Override
@@ -119,9 +117,9 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 		Polje[][] plosca;;
 		if (Vodja.igra != null) {
 			plosca = Vodja.igra.getPlosca();
-			for (Polje [] x : plosca) {
-				System.out.println(Arrays.toString(x));
-			}
+//			for (Polje [] x : plosca) {
+//				System.out.println(Arrays.toString(x));
+//			}
 			for (int i = 0; i < Igra.N; i++) {
 				for (int j = 0; j < Igra.N; j++) {
 					switch(plosca[i][j]) {
@@ -141,17 +139,12 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 			int w = (int)(squareWidth());
 			int x = e.getX();
 			int y = e.getY();
-			int i = (int) (x - .25*w)/ w ;
-//			int i = x / w ;
-			double di = (x % w) / squareWidth() ;
-			int j = (int) (y - .25*w) / w ;
-//			int j = y / w ;
-			double dj = (y % w) / squareWidth() ;
+			int i = (int) (x - .5*w)/ w ;
+			int j = (int) (y - .5*w) / w ;
 			if (0 <= i && i < Igra.N &&
-					0.5 * LINE_WIDTH < di && di < 1.0 - 0.5 * LINE_WIDTH &&
-					0 <= j && j < Igra.N && 
-					0.5 * LINE_WIDTH < dj && dj < 1.0 - 0.5 * LINE_WIDTH) {
+				0 <= j && j < Igra.N) {
 				Vodja.igrajClovekovoPotezo (new Poteza(i, j));
+//				Vodja.igrajClovekovoPotezo (new Koordinati(i, j));
 			}
 		}
 	}
