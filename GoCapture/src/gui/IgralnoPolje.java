@@ -16,6 +16,7 @@ import logika.Igra;
 import logika.Polje;
 import logika.Vrsta;
 import logika.Koordinati;
+import logika.Liberty;
 import splosno.Poteza;
 
 /**
@@ -136,16 +137,24 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (Vodja.clovekNaVrsti) {
+//			System.out.println("na vrsti: " + Vodja.clovekNaVrsti + ", njegovi libs");
 			int w = (int)(squareWidth());
 			int x = e.getX();
 			int y = e.getY();
-			int i = (int) (x - .5*w)/ w ;
-			int j = (int) (y - .5*w) / w ;
+			int i = (int) (x - .25*w) / w ;
+			int j = (int) (y - .25*w) / w ;
+//			System.out.println("Kliknil: " + i + "-"+j);
 			if (0 <= i && i < Igra.N &&
 				0 <= j && j < Igra.N) {
-				Vodja.igrajClovekovoPotezo (new Poteza(i, j));
+				Vodja.igrajClovekovoPotezo (new Koordinati(i, j));
 //				Vodja.igrajClovekovoPotezo (new Koordinati(i, j));
 			}
+//			for (Liberty lib : Igra.LIBS.values()) {
+//				System.out.println(lib);
+//			}
+//			for (String lib : Igra.LIBS.keySet()) {
+//				System.out.println(Igra.LIBS.get(lib));
+//			}
 		}
 	}
 
