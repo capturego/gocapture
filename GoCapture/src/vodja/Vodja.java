@@ -1,17 +1,19 @@
 package vodja;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.Map;
 import java.util.List;
 
 import javax.swing.SwingWorker;
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
+import inteligenca.Inteligenca;
+import inteligenca.Minimax;
 import gui.GlavnoOkno;
-import logika.Graf;
+//import logika.Graf;
 import logika.Igra;
 import logika.Igralec;
-import logika.Koordinati;
 import splosno.Poteza;
 
 public class Vodja {	
@@ -31,7 +33,7 @@ public class Vodja {
 	
 	public static void igramo () {
 		okno.osveziGUI();
-		switch (igra.stanje_()) {
+		switch (igra.stanje()) {
 		case ZMAGA_O: 
 		case ZMAGA_X: 
 		case NEODLOCENO: 
@@ -52,6 +54,8 @@ public class Vodja {
 	
 	private static Random random = new Random ();
 
+	public static Inteligenca racunalnikovaInteligenca = new Minimax(1);
+
 	public static void igrajRacunalnikovoPotezo() {
 //		for (String l_ : igra.LIBS.keySet()) {
 //			System.out.println(igra.LIBS.get(l_));
@@ -60,17 +64,19 @@ public class Vodja {
 //			System.out.println(g_);
 //		}
 		Igra zacetnaIgra = igra;
-		SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void>() {
+		SwingWorker<Poteza, Void> worker = new SwingWorker<Poteza, Void>() {
 			@Override
-			protected Koordinati doInBackground() {
-//				try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
-				List<Koordinati> moznePoteze = igra.poteze();
-				int randomIndex = random.nextInt(moznePoteze.size());
-				return moznePoteze.get(randomIndex);
+			protected Poteza doInBackground() {
+				Poteza poteza = racunalnikovaInteligenca.izberiPotezo(igra);
+				try {TimeUnit.SECONDS.sleep(10);} catch (Exception e) {};
+				return poteza;
+//				List<Poteza> moznePoteze = igra.poteze();
+//				int randomIndex = random.nextInt(moznePoteze.size());
+//				return moznePoteze.get(randomIndex);
 			}
 			@Override
 			protected void done() {
-				Koordinati poteza = null;
+				Poteza poteza = null;
 				try {
 					poteza = get(); 
 				}
@@ -85,15 +91,8 @@ public class Vodja {
 		};
 		worker.execute();
 	}
-				
-//		List<Poteza> moznePoteze = igra.poteze();
-//		try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
-//		int randomIndex = random.nextInt(moznePoteze.size());
-//		Poteza poteza = moznePoteze.get(randomIndex);
-//		igra.odigraj(poteza);
-//		igramo ();
 
-	public static void igrajClovekovoPotezo(Koordinati poteza) {
+	public static void igrajClovekovoPotezo(Poteza poteza) {
 		if (igra.odigraj(poteza)) {
 //			for (String l_ : igra.LIBS.keySet()) {
 //				System.out.println(igra.LIBS.get(l_));

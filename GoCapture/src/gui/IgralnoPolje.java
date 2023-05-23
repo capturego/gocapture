@@ -1,6 +1,5 @@
 package gui;
 
-import java.util.Arrays;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,9 +13,6 @@ import javax.swing.JPanel;
 import vodja.Vodja;
 import logika.Igra;
 import logika.Polje;
-import logika.Vrsta;
-import logika.Koordinati;
-import logika.Liberty;
 import splosno.Poteza;
 
 /**
@@ -89,16 +85,16 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 		double w = squareWidth();
 
 		// če imamo zmagovalno terico, njeno ozadje pobarvamo
-		Vrsta t = null;
-		if (Vodja.igra != null) {t = Vodja.igra.zmagovalnaVrsta();}
-		if (t != null) {
-			g2.setColor(new Color(255, 255, 196));
-			for (int k = 0; k < Igra.N; k++) {
-				int i = t.x[k];
-				int j = t.y[k];
-				g2.fillRect((int)(w * i), (int)(w * j), (int)w, (int)w);
-			}
-		}
+//		Vrsta t = null;
+//		if (Vodja.igra != null) {t = Vodja.igra.zmagovalnaVrsta();}
+//		if (t != null) {
+//			g2.setColor(new Color(255, 255, 196));
+//			for (int k = 0; k < Igra.N; k++) {
+//				int i = t.x[k];
+//				int j = t.y[k];
+//				g2.fillRect((int)(w * i), (int)(w * j), (int)w, (int)w);
+//			}
+//		}
 		
 		// črte
 		g2.setColor(Color.BLACK);
@@ -146,7 +142,7 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 //			System.out.println("Kliknil: " + i + "-"+j);
 			if (0 <= i && i < Igra.N &&
 				0 <= j && j < Igra.N) {
-				Vodja.igrajClovekovoPotezo (new Koordinati(i, j));
+				Vodja.igrajClovekovoPotezo (new Poteza(i, j));
 //				Vodja.igrajClovekovoPotezo (new Koordinati(i, j));
 			}
 //			for (Liberty lib : Igra.LIBS.values()) {

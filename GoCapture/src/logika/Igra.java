@@ -1,16 +1,13 @@
 package logika;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import logika.Graf;
-import logika.Tocka;
-
+import java.util.HashSet;
+import java.util.Set;
 import splosno.Poteza;
+
 
 public class Igra {
 
@@ -19,12 +16,9 @@ public class Igra {
 	public static final int N = 9;
 
 	private int imenovalecGrafov;
-	public static HashMap<String, Liberty> LIBS;
-	public static HashMap<String, Graf> GRAFI;
+	public Map<String, Liberty> LIBS;
+	public Map<String, Graf> GRAFI;
 	
-	// Pomožen seznam vseh vrstah na plošči.
-	private static final List<Vrsta> VRSTE = new LinkedList<Vrsta>();
-
 	// Igralno polje
 	private Polje[][] plosca;
 	
@@ -48,6 +42,21 @@ public class Igra {
 		}
 		naPotezi = Igralec.CR;
 	}
+
+	public Igra(Igra igra) {
+		imenovalecGrafov = igra.imenovalecGrafov;
+		GRAFI = new HashMap<String, Graf>();
+		GRAFI.putAll(igra.GRAFI);
+		LIBS = new HashMap<String, Liberty>();
+		LIBS.putAll(igra.LIBS);
+		plosca = new Polje[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				plosca[i][j] = igra.plosca[i][j];
+			}
+		}
+		naPotezi = igra.naPotezi;
+	}
 	
 	/**
 	 * @return igralca na potezi
@@ -66,12 +75,12 @@ public class Igra {
 	/**
 	 * @return seznam možnih potez
 	 */
-	public List<Koordinati> poteze() {
-		LinkedList<Koordinati> ps = new LinkedList<Koordinati>();
+	public List<Poteza> poteze() {
+		List<Poteza> ps = new LinkedList<Poteza>();
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				if (plosca[i][j] == Polje.PRAZNO || plosca[i][j] == Polje.LIBERTY) {
-					ps.add(new Koordinati(i, j));
+					ps.add(new Poteza(i, j));
 				}
 			}
 		}
@@ -81,37 +90,6 @@ public class Igra {
 		return Integer.toString(imenovalecGrafov++);
 	}
 
-
-	/**
-	 * @param t
-	 * @return igralec, ki ima zapolnjeno vrsto @{t}, ali {@null}, če nihče
-	 */
-	private Igralec cigavaVrsta(Vrsta t) {
-		int count_X = 0;
-		int count_O = 0;
-		for (int k = 0; k < N && (count_X == 0 || count_O == 0); k++) {
-			switch (plosca[t.x[k]][t.y[k]]) {
-			case CR: count_O += 1; break;
-			case BE: count_X += 1; break;
-			case PRAZNO: break;
-			}
-		}
-		if (count_O == N) { return Igralec.CR; }
-		else if (count_X == N) { return Igralec.BE; }
-		else { return null; }
-	}
-
-	/**
-	 * @return zmagovalna vrsta, ali {@null}, če je ni
-	 */
-	public Vrsta zmagovalnaVrsta() {
-		for (Vrsta t : VRSTE) {
-			Igralec lastnik = cigavaVrsta(t);
-			if (lastnik != null) return t;
-		}
-		return null;
-	}
-	
 	private HashSet<String> grafi0libs () {
 		HashSet<String> grafi0libs = new HashSet<String>();
 //		HashSet<String> grafi0libs = null;
@@ -125,27 +103,7 @@ public class Igra {
 	/**
 	 * @return trenutno stanje igre
 	 */
-//	public Stanje stanje_() {
-//		// Ali imamo zmagovalca?
-//		Vrsta t = zmagovalnaVrsta();
-//		if (t != null) {
-//			switch (plosca[t.x[0]][t.y[0]]) {
-//			case CR: return Stanje.ZMAGA_O; 
-//			case BE: return Stanje.ZMAGA_X;
-//			case PRAZNO: assert false;
-//			}
-//		}
-//		// Ali imamo kakšno prazno polje?
-//		// Če ga imamo, igre ni konec in je nekdo na potezi
-//		for (int i = 0; i < N; i++) {
-//			for (int j = 0; j < N; j++) {
-//				if (plosca[i][j] == Polje.PRAZNO) return Stanje.V_TEKU;
-//			}
-//		}
-//		// Polje je polno, rezultat je neodločen
-//		return Stanje.NEODLOCENO;
-//	}
-	public Stanje stanje_() {
+	public Stanje stanje() {
 		// Ali imamo zmagovalca?
 //		for 
 		HashSet<String> grafi0libs = grafi0libs();
@@ -156,7 +114,6 @@ public class Igra {
 					switch (naPotezi) {
 					case CR: return Stanje.ZMAGA_O; 
 					case BE: return Stanje.ZMAGA_X;
-//					default: return Stanje.NEODLOCENO;
 					}
 				}
 			}
@@ -165,7 +122,6 @@ public class Igra {
 					switch (naPotezi) {
 					case CR: return Stanje.ZMAGA_X; 
 					case BE: return Stanje.ZMAGA_O;
-//					default: return Stanje.NEODLOCENO;
 					}
 				}
 				else {
@@ -190,13 +146,13 @@ public class Igra {
 	 * @param p
 	 * @return true, če je bila poteza uspešno odigrana
 	 */
-	public boolean odigraj(Koordinati p) {
-		int x = p.getX();
-		int y = p.getY();
+	public boolean odigraj(Poteza poteza) {
+		int x = poteza.x();
+		int y = poteza.y();
 		String imeTocke = Tocka.toString(x,y); //xy
 		String imeGrafa = imenujGraf();
 		Graf bodocGraf = new Graf(imeGrafa, naPotezi);
-		HashSet<String> sosedi = Tocka.sosedi(x, y, N);
+		Set<String> sosedi = Tocka.sosedi(x, y, N);
 		if (plosca[x][y] == Polje.PRAZNO) {  // => nov graf, preveri nove libertije in jim po potrebi dodaj ta graf
 			plosca[x][y] = naPotezi.getPolje();
 			bodocGraf.dodajTocko(imeTocke);
@@ -216,7 +172,7 @@ public class Igra {
 		else if (plosca[x][y] == Polje.LIBERTY) {
 			plosca[x][y] = naPotezi.getPolje();
 			Liberty taLib = LIBS.get(imeTocke);
-			HashSet<String> libsToUpdate = new HashSet<String>();
+			Set<String> libsToUpdate = new HashSet<String>();
 			for (String imeGrafa_ : taLib.grafi) {  // preverimo vse grafe katerim je to liberty
 				Graf graf_ = GRAFI.get(imeGrafa_);
 				sosedi.removeAll(graf_.tocke);

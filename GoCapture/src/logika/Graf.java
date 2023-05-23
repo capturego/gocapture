@@ -1,5 +1,6 @@
 package logika;
 //import java.io.Serializable;
+import java.util.Set;
 import java.util.HashSet;
 //import logika.Tocka;
 
@@ -10,9 +11,9 @@ public class Graf {
 
 	protected String ime;
 //	protected int stevecLibs = 0;  // stevec -> liberties (stevec)
-	protected Igralec lastnik;
-	public HashSet<String> tocke;
-	public HashSet<String> libs;
+	public Igralec lastnik;
+	public Set<String> tocke;
+	public Set<String> libs;
 
 	
 	public Graf (String ime, Igralec lastnik) {
@@ -24,13 +25,13 @@ public class Graf {
 	public void dodajTocko (String ime) {
 		tocke.add(ime);
 	}
-	public void dodajTocke (HashSet<String> tocke_) {
+	public void dodajTocke (Set<String> tocke_) {
 		tocke.addAll(tocke_);
 	}
 	public void dodajLib (String ime) {
 		libs.add(ime);
 	}
-	public void dodajLibs (HashSet<String> libs_) {
+	public void dodajLibs (Set<String> libs_) {
 		libs.addAll(libs_);
 	}
 	public int moc () {

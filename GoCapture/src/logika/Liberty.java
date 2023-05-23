@@ -1,6 +1,6 @@
 package logika;
 //import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Set;
 import java.util.HashSet;
 //import logika.Tocka;
 
@@ -10,7 +10,7 @@ public class Liberty  { // extends Tocka
 //	static final long serialVersionUID = 1L;
 
 //	private int stevecGrafov = 0;
-	protected HashSet<String> grafi;
+	public Set<String> grafi;
 	protected String ime;
 //	private Igralec lastnik;
 	
