@@ -15,7 +15,7 @@ public class OceniPozicijo {
 		for (Liberty lib : igra.LIBS.values()) {
 			for (String imeGrafa : lib.grafi) {
 				Graf graf = igra.GRAFI.get(imeGrafa);
-				ocena = (graf.lastnik == jaz) ? ocena-1 : ocena+1;
+				ocena = (graf.lastnik == jaz) ? ocena+1 : ocena-1;
 			}
 		}
 		return ocena;

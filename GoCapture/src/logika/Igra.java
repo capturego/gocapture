@@ -31,13 +31,13 @@ public class Igra {
 	 * Nova igra, v začetni poziciji je prazna in na potezi je O.
 	 */
 	public Igra() {
-		imenovalecGrafov = 0;
-		GRAFI = new HashMap<String, Graf>();
-		LIBS = new HashMap<String, Liberty>();
-		plosca = new Polje[N][N];
+		this.imenovalecGrafov = 0;
+		this.GRAFI = new HashMap<String, Graf>();
+		this.LIBS = new HashMap<String, Liberty>();
+		this.plosca = new Polje[N][N];
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				plosca[i][j] = Polje.PRAZNO;
+				this.plosca[i][j] = Polje.PRAZNO;
 			}
 		}
 		naPotezi = Igralec.CR;
@@ -45,17 +45,23 @@ public class Igra {
 
 	public Igra(Igra igra) {
 		imenovalecGrafov = igra.imenovalecGrafov;
-		GRAFI = new HashMap<String, Graf>();
-		GRAFI.putAll(igra.GRAFI);
-		LIBS = new HashMap<String, Liberty>();
-		LIBS.putAll(igra.LIBS);
-		plosca = new Polje[N][N];
+		this.GRAFI = new HashMap<String, Graf>();
+		for (String k : igra.GRAFI.keySet()) {
+			this.GRAFI.put(k, igra.GRAFI.get(k).kopiraj());
+		}
+		this.LIBS = new HashMap<String, Liberty>();
+		for (String k : igra.LIBS.keySet()) {
+			this.LIBS.put(k, igra.LIBS.get(k).kopiraj());
+		}
+//		System.out.println(igra.GRAFI);
+//		System.out.println(GRAFI);
+		this.plosca = new Polje[N][N];
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				plosca[i][j] = igra.plosca[i][j];
+				this.plosca[i][j] = igra.plosca[i][j];
 			}
 		}
-		naPotezi = igra.naPotezi;
+		this.naPotezi = igra.naPotezi;
 	}
 	
 	/**
@@ -112,8 +118,8 @@ public class Igra {
 			for (String nasprotnikovGraf : grafi0libs) {
 				if (GRAFI.get(nasprotnikovGraf).lastnik != naPotezi) {
 					switch (naPotezi) {
-					case CR: return Stanje.ZMAGA_O; 
-					case BE: return Stanje.ZMAGA_X;
+					case BE: return Stanje.ZMAGA_O;
+					case CR: return Stanje.ZMAGA_X;
 					}
 				}
 			}
@@ -165,7 +171,7 @@ public class Igra {
 				sosedLib.dodajGraf(imeGrafa);
 				LIBS.put(imeSoseda, sosedLib);
 			}
-			GRAFI.put(imeGrafa, bodocGraf);
+			this.GRAFI.put(imeGrafa, bodocGraf);
 			naPotezi = naPotezi.nasprotnik();
 			return true;
 		}
@@ -174,13 +180,13 @@ public class Igra {
 			Liberty taLib = LIBS.get(imeTocke);
 			Set<String> libsToUpdate = new HashSet<String>();
 			for (String imeGrafa_ : taLib.grafi) {  // preverimo vse grafe katerim je to liberty
-				Graf graf_ = GRAFI.get(imeGrafa_);
+				Graf graf_ = this.GRAFI.get(imeGrafa_);
 				sosedi.removeAll(graf_.tocke);
 				if (graf_.lastnik == naPotezi) {  // => bomo zdruzevali grafu/e
 					graf_.libs.remove(imeTocke);
 					bodocGraf.dodajLibs(graf_.libs);
 					bodocGraf.dodajTocke(graf_.tocke);
-					GRAFI.remove(imeGrafa_);
+					this.GRAFI.remove(imeGrafa_);
 					for (Liberty lib : LIBS.values()) {
 						if ((!lib.equals(taLib)) && lib.grafi.contains(imeGrafa_)) {
 							libsToUpdate.add(lib.ime);
@@ -191,7 +197,7 @@ public class Igra {
 				} 
 				else {  // to lib nasprotnikovim grafom -> tem grafom samo odvzamemo ta lib
 					graf_.libs.remove(taLib.ime);
-					GRAFI.put(imeGrafa_, graf_);
+					this.GRAFI.put(imeGrafa_, graf_);
 				}
 			}
 			for (String imeSoseda : sosedi) {  // preverimo vse sosede
@@ -208,7 +214,7 @@ public class Igra {
 				lib.dodajGraf(imeGrafa);
 				LIBS.put(imeLiba, lib);
 			}
-			GRAFI.put(imeGrafa, bodocGraf);
+			this.GRAFI.put(imeGrafa, bodocGraf);
 			LIBS.remove(imeTocke);
 			naPotezi = naPotezi.nasprotnik();
 			return true;

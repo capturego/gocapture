@@ -37,10 +37,20 @@ public class Graf {
 	public int moc () {
 		return libs.size();
 	}
+	public Graf kopiraj () {
+		Graf kopija = new Graf(this.ime, this.lastnik);
+		for (String tocka : tocke) {
+			kopija.tocke.add(tocka);
+		}
+		for (String lib : libs) {
+			kopija.libs.add(lib);
+		}
+		return kopija;
+	}
 	public String toString () {
 //		for (String x : libs) {
 //			System.out.print(x + ", ");
 //		}
-		return ime + ", lastnik: " + lastnik + ", stLibs: " + moc() + " <- graf";
+		return ime + ", lastnik: " + lastnik + ", stLibs: " + moc() + " <- graf ";
 	}
 }

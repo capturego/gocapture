@@ -27,6 +27,13 @@ public class Liberty  { // extends Tocka
 	public void dodajGraf (String ime) {
 		grafi.add(ime);
 	}
+	public Liberty kopiraj () {
+		Liberty kopija = new Liberty(this.ime);
+		for (String imeGrafa : grafi) {
+			kopija.grafi.add(imeGrafa);
+		}
+		return kopija;
+	}
 //	public Graf dodajGraf (String ime, Igralec lastnik) {
 //		if (graf(ime) != null) {
 //			return graf(ime);

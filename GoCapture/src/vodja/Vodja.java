@@ -1,15 +1,16 @@
 package vodja;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+//import java.util.Random;
+//import java.util.concurrent.TimeUnit;
 import java.util.Map;
-import java.util.List;
+//import java.util.List;
 
 import javax.swing.SwingWorker;
 //import java.util.concurrent.TimeUnit;
 
 import inteligenca.Inteligenca;
 import inteligenca.Minimax;
+import inteligenca.Alphabeta;
 import gui.GlavnoOkno;
 //import logika.Graf;
 import logika.Igra;
@@ -52,9 +53,10 @@ public class Vodja {
 		}
 	}
 	
-	private static Random random = new Random ();
+//	private static Random random = new Random ();
 
-	public static Inteligenca racunalnikovaInteligenca = new Minimax(1);
+//	public static Inteligenca racunalnikovaInteligenca = new Minimax(2);
+	public static Inteligenca racunalnikovaInteligenca = new Alphabeta(3);
 
 	public static void igrajRacunalnikovoPotezo() {
 //		for (String l_ : igra.LIBS.keySet()) {
@@ -68,7 +70,7 @@ public class Vodja {
 			@Override
 			protected Poteza doInBackground() {
 				Poteza poteza = racunalnikovaInteligenca.izberiPotezo(igra);
-				try {TimeUnit.SECONDS.sleep(10);} catch (Exception e) {};
+//				try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 				return poteza;
 //				List<Poteza> moznePoteze = igra.poteze();
 //				int randomIndex = random.nextInt(moznePoteze.size());
