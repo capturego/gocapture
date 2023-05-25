@@ -26,6 +26,8 @@ public class Vodja {
 	public static Igra igra = null;
 	
 	public static boolean clovekNaVrsti = false;
+	
+	public static Inteligenca racunalnikovaInteligenca = new Inteligenca();
 		
 	public static void igramoNovoIgro () {
 		igra = new Igra ();
@@ -37,8 +39,7 @@ public class Vodja {
 		switch (igra.stanje()) {
 		case ZMAGA_O: 
 		case ZMAGA_X: 
-		case NEODLOCENO: 
-			return; // odhajamo iz metode igramo
+			return;
 		case V_TEKU: 
 			Igralec igralec = igra.naPotezi();
 			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec);
@@ -56,7 +57,8 @@ public class Vodja {
 //	private static Random random = new Random ();
 
 //	public static Inteligenca racunalnikovaInteligenca = new Minimax(2);
-	public static Inteligenca racunalnikovaInteligenca = new Alphabeta(3);
+//	public static Inteligenca racunalnikovaInteligenca = new Alphabeta(2);
+//	public static Inteligenca racunalnikovaInteligenca = new Inteligenca(); // = new Alphabeta(3);
 
 	public static void igrajRacunalnikovoPotezo() {
 //		for (String l_ : igra.LIBS.keySet()) {
@@ -82,9 +84,7 @@ public class Vodja {
 				try {
 					poteza = get(); 
 				}
-//					System.out.println("DOBIL POTEZO");} 
 				catch (Exception e) {}
-//					System.out.println("NE DOBIL POTEZO");};
 				if (igra == zacetnaIgra) {
 					igra.odigraj(poteza);
 					igramo();
