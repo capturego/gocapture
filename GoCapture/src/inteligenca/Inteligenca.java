@@ -19,11 +19,8 @@ public class Inteligenca extends KdoIgra {
 	
 	public Inteligenca () {
 		super("skupina_123");
-		
 	}
 	public Poteza izberiPotezo (Igra igra) {
 		return new Alphabeta(3).izberiPotezo(igra);
-//		Inteligenca inteli = new Alphabeta(3);
-//		return inteli.izberiPotezo(igra);
 	}
 }

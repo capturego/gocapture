@@ -5,18 +5,18 @@ package logika;
  */
 
 public enum Igralec {
-	BE, CR;
+	BELI, CRNI;
 
 	public Igralec nasprotnik() {
-		return (this == BE ? CR : BE);
+		return (this == BELI ? CRNI : BELI);
 	}
 
 	public Polje getPolje() {
-		return (this == BE ? Polje.BE : Polje.CR);
+		return (this == BELI ? Polje.BELO : Polje.CRNO);
 	}
 	
 	@Override
 	public String toString() {
-		return (this == BE ? "beli" : "crni");
+		return (this == BELI ? "beli" : "črni");
 	}
 }

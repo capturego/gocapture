@@ -1,7 +1,5 @@
 package logika;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.HashSet;
@@ -16,9 +14,12 @@ public class Igra {
 	public static final int N = 9;
 
 	private int imenovalecGrafov;
-	public Map<String, Liberty> LIBS;
+	public Map<Poteza, Liberty> LIBS;
 	public Map<String, Graf> GRAFI;
 	public Set<Poteza> moznePoteze;
+	public Stanje stanje_;
+	public Graf ujetiGraf;
+//	public Stanje stanje_ = Stanje.V_TEKU;
 	
 	// Igralno polje
 	private Polje[][] plosca;
@@ -34,7 +35,7 @@ public class Igra {
 	public Igra() {
 		imenovalecGrafov = 0;
 		GRAFI = new HashMap<String, Graf>();
-		LIBS = new HashMap<String, Liberty>();
+		LIBS = new HashMap<Poteza, Liberty>();
 		moznePoteze = new HashSet<Poteza>();
 		plosca = new Polje[N][N];
 		for (int i = 0; i < N; i++) {
@@ -43,25 +44,23 @@ public class Igra {
 				moznePoteze.add(new Poteza(i,j));
 			}
 		}
-		naPotezi = Igralec.CR;
+		naPotezi = Igralec.CRNI;
 	}
 
 	public Igra(Igra igra) {
 		imenovalecGrafov = igra.imenovalecGrafov;
 		GRAFI = new HashMap<String, Graf>();
-		for (String k : igra.GRAFI.keySet()) {
-			this.GRAFI.put(k, igra.GRAFI.get(k).kopiraj());
+		for (String imeGrafa : igra.GRAFI.keySet()) {
+			this.GRAFI.put(imeGrafa, igra.GRAFI.get(imeGrafa).kopiraj());
 		}
-		this.LIBS = new HashMap<String, Liberty>();
-		for (String k : igra.LIBS.keySet()) {
-			this.LIBS.put(k, igra.LIBS.get(k).kopiraj());
+		this.LIBS = new HashMap<Poteza, Liberty>();
+		for (Poteza poteza : igra.LIBS.keySet()) {
+			this.LIBS.put(poteza, igra.LIBS.get(poteza).kopiraj());
 		}
 		moznePoteze = new HashSet<Poteza>();
 		for (Poteza poteza : igra.moznePoteze) {
 			moznePoteze.add(new Poteza(poteza.x(), poteza.y()));
 		}
-//		System.out.println(igra.GRAFI);
-//		System.out.println(GRAFI);
 		this.plosca = new Polje[N][N];
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -85,20 +84,6 @@ public class Igra {
 		return plosca;
 	}
 
-	/**
-	 * @return seznam možnih potez
-	 */
-//	public List<Poteza> poteze() {
-//		List<Poteza> ps = new LinkedList<Poteza>();
-//		for (int i = 0; i < N; i++) {
-//			for (int j = 0; j < N; j++) {
-//				if (plosca[i][j] == Polje.PRAZNO || plosca[i][j] == Polje.LIBERTY) {
-//					ps.add(new Poteza(i, j));
-//				}
-//			}
-//		}
-//		return ps;
-//	}
 	private String imenujGraf() {
 		return Integer.toString(imenovalecGrafov++);
 	}
@@ -121,13 +106,20 @@ public class Igra {
 		HashSet<String> grafi0libs = grafi0libs();
 		if (!grafi0libs.isEmpty()) {
 			for (String nasprotnikovGraf : grafi0libs) {
-				if (GRAFI.get(nasprotnikovGraf).lastnik == naPotezi) {
-					if (naPotezi == Igralec.BE) {return Stanje.ZMAGA_O;}
-					else if (naPotezi == Igralec.CR) {return Stanje.ZMAGA_X;}
+				Graf ujetiGraf_ = GRAFI.get(nasprotnikovGraf);
+				if (ujetiGraf_.lastnik == naPotezi) {
+					ujetiGraf = ujetiGraf_;
+					if (naPotezi == Igralec.BELI) {return Stanje.ZMAGA_CRNI;}
+//					else if (naPotezi == Igralec.CR) {return Stanje.ZMAGA_X;}
+					else {return Stanje.ZMAGA_BELI;}
 					}
 				}
-			if (naPotezi == Igralec.BE) {return Stanje.ZMAGA_X;}
-			else {return Stanje.ZMAGA_O;}
+			if (naPotezi == Igralec.BELI) {
+//				ujetiGraf = ujetiGraf_;
+				return Stanje.ZMAGA_BELI;}
+			else {
+//				ujetiGraf = ujetiGraf_;
+				return Stanje.ZMAGA_CRNI;}
 		}
 		else {
 			return Stanje.V_TEKU;
@@ -143,21 +135,20 @@ public class Igra {
 	public boolean odigraj(Poteza poteza) {
 		int x = poteza.x();
 		int y = poteza.y();
-		String imeTocke = Tocka.toString(x,y); //xy
+		Tocka tocka = new Tocka(poteza);
 		String imeGrafa = imenujGraf();
 		Graf bodocGraf = new Graf(imeGrafa, naPotezi);
-		Set<String> sosedi = Tocka.sosedi(x, y, N);
+		Set<Poteza> sosedi = tocka.sosedi(N);
 		if (plosca[x][y] == Polje.PRAZNO) {  // => nov graf, preveri nove libertije in jim po potrebi dodaj ta graf
 			plosca[x][y] = naPotezi.getPolje();
-			bodocGraf.dodajTocko(imeTocke);
-			for (String imeSoseda : sosedi) {
-//				System.out.print(ime_s + ", ");
-				String[] xy = imeSoseda.split("-");
-				plosca[Integer.parseInt(xy[0])][Integer.parseInt(xy[1])] = Polje.LIBERTY;
-				Liberty sosedLib = (LIBS.containsKey(imeSoseda)) ? LIBS.get(imeSoseda) : new Liberty(imeSoseda);
-				bodocGraf.dodajLib(imeSoseda);
+			bodocGraf.dodajTocko(poteza);
+			for (Poteza sosed_ : sosedi) {
+				Tocka sosed = new Tocka(sosed_);
+				plosca[sosed.x][sosed.y] = Polje.LIBERTY;
+				Liberty sosedLib = (LIBS.containsKey(sosed_)) ? LIBS.get(sosed_) : new Liberty(sosed_);
+				bodocGraf.dodajLib(sosed_);
 				sosedLib.dodajGraf(imeGrafa);
-				LIBS.put(imeSoseda, sosedLib);
+				LIBS.put(sosed_, sosedLib);
 			}
 			this.GRAFI.put(imeGrafa, bodocGraf);
 			naPotezi = naPotezi.nasprotnik();
@@ -166,45 +157,45 @@ public class Igra {
 		}
 		else if (plosca[x][y] == Polje.LIBERTY) {
 			plosca[x][y] = naPotezi.getPolje();
-			Liberty taLib = LIBS.get(imeTocke);
-			Set<String> libsToUpdate = new HashSet<String>();
+			Liberty taLib = LIBS.get(poteza);
+			Set<Poteza> libsToUpdate = new HashSet<Poteza>();
 			for (String imeGrafa_ : taLib.grafi) {  // preverimo vse grafe katerim je to liberty
 				Graf graf_ = this.GRAFI.get(imeGrafa_);
 				sosedi.removeAll(graf_.tocke);
 				if (graf_.lastnik == naPotezi) {  // => bomo zdruzevali grafu/e
-					graf_.libs.remove(imeTocke);
+					graf_.libs.remove(poteza);
 					bodocGraf.dodajLibs(graf_.libs);
 					bodocGraf.dodajTocke(graf_.tocke);
 					this.GRAFI.remove(imeGrafa_);
 					for (Liberty lib : LIBS.values()) {
 						if ((!lib.equals(taLib)) && lib.grafi.contains(imeGrafa_)) {
-							libsToUpdate.add(lib.ime);
+							libsToUpdate.add(new Poteza(lib.x, lib.y));
 							lib.grafi.remove(imeGrafa_);
 							lib.dodajGraf(imeGrafa);
 						}
 					}
 				} 
 				else {  // to lib nasprotnikovim grafom -> tem grafom samo odvzamemo ta lib
-					graf_.libs.remove(taLib.ime);
+					graf_.libs.remove(new Poteza(taLib.x, taLib.y));
 					this.GRAFI.put(imeGrafa_, graf_);
 				}
 			}
-			for (String imeSoseda : sosedi) {  // preverimo vse sosede
-				String[] xy = imeSoseda.split("-");
-				plosca[Integer.parseInt(xy[0])][Integer.parseInt(xy[1])] = Polje.LIBERTY;
-				Liberty lib = LIBS.containsKey(imeSoseda) ? LIBS.get(imeSoseda) : new Liberty(imeSoseda);
-				bodocGraf.dodajLib(imeSoseda);
+			for (Poteza sosed_ : sosedi) {  // preverimo vse sosede
+				Tocka sosed = new Tocka(sosed_);
+				plosca[sosed.x][sosed.y] = Polje.LIBERTY;
+				Liberty lib = LIBS.containsKey(sosed_) ? LIBS.get(sosed_) : new Liberty(sosed_);
+				bodocGraf.dodajLib(sosed_);
 				lib.dodajGraf(imeGrafa);
-				LIBS.put(imeSoseda, lib);
+				LIBS.put(sosed_, lib);
 			}
-			bodocGraf.dodajTocko(imeTocke);
-			for (String imeLiba : libsToUpdate) {
-				Liberty lib = LIBS.get(imeLiba);
+			bodocGraf.dodajTocko(poteza);
+			for (Poteza lib_ : libsToUpdate) {
+				Liberty lib = LIBS.get(lib_);
 				lib.dodajGraf(imeGrafa);
-				LIBS.put(imeLiba, lib);
+				LIBS.put(lib_, lib);
 			}
 			this.GRAFI.put(imeGrafa, bodocGraf);
-			LIBS.remove(imeTocke);
+			LIBS.remove(poteza);
 			naPotezi = naPotezi.nasprotnik();
 			moznePoteze.remove(poteza);
 			return true;

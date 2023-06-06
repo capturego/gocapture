@@ -35,22 +35,22 @@ public class Alphabeta extends Inteligenca {
 		Poteza kandidat = moznePoteze.iterator().next(); // Možno je, da se ne spremini vrednost kanditata. Zato ne more biti null.
 		for (Graf graf : igra.GRAFI.values()) {
 			if (graf.moc() == 1) {
-				String lib = graf.libs.iterator().next();
-				String[] xy = lib.split("-");
-				Poteza poteza = new Poteza(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
+				Poteza lib = graf.libs.iterator().next();
+//				String[] xy = lib.split("-");
+//				Poteza poteza = lib;
 				if (graf.lastnik == jaz) {
-					return new OcenjenaPoteza (poteza, ZGUBA/2);
+					return new OcenjenaPoteza (lib, ZGUBA/2);
 				}
 				else {
-					return new OcenjenaPoteza (poteza, ZMAGA);
+					return new OcenjenaPoteza (lib, ZMAGA);
 				}
 			}
 			else if (graf.moc() == 2 && graf.lastnik != jaz) {
-				String lib = graf.libs.iterator().next();
-				String[] xy = lib.split("-");
-				Poteza poteza = new Poteza(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
+				Poteza lib = graf.libs.iterator().next();
+//				String[] xy = lib.split("-");
+//				Poteza poteza = new Poteza(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
 				Igra kopijaIgre = new Igra(igra);
-				kopijaIgre.odigraj(poteza);
+				kopijaIgre.odigraj(lib);
 				ocena = alphabetaPoteze (kopijaIgre, globina, alpha, beta, jaz).ocena;
 			}
 		}
@@ -59,8 +59,8 @@ public class Alphabeta extends Inteligenca {
 			kopijaIgre.odigraj(p);
 			int ocenap;
 			switch (kopijaIgre.stanje()) {
-			case ZMAGA_O: ocenap = (jaz == Igralec.CR ? ZMAGA : ZGUBA); break;
-			case ZMAGA_X: ocenap = (jaz == Igralec.BE ? ZMAGA : ZGUBA); break;
+			case ZMAGA_CRNI: ocenap = (jaz == Igralec.CRNI ? ZMAGA : ZGUBA); break;
+			case ZMAGA_BELI: ocenap = (jaz == Igralec.BELI ? ZMAGA : ZGUBA); break;
 //			case NEODLOCENO: ocenap = NEODLOC; break;
 			default:
 				// Nekdo je na potezi

@@ -3,6 +3,7 @@ package logika;
 import java.util.Set;
 import java.util.HashSet;
 //import logika.Tocka;
+import splosno.Poteza;
 
 //public class Graf implements Serializable {
 public class Graf {
@@ -10,28 +11,27 @@ public class Graf {
 //	static final long serialVersionUID = 1L;
 
 	protected String ime;
-//	protected int stevecLibs = 0;  // stevec -> liberties (stevec)
 	public Igralec lastnik;
-	public Set<String> tocke;
-	public Set<String> libs;
+	public Set<Poteza> tocke;
+	public Set<Poteza> libs;
 
 	
 	public Graf (String ime, Igralec lastnik) {
 		this.ime = ime;
 		this.lastnik = lastnik;
-		tocke = new HashSet<String>();
-		libs = new HashSet<String>();
+		tocke = new HashSet<Poteza>();
+		libs = new HashSet<Poteza>();
 	}
-	public void dodajTocko (String ime) {
-		tocke.add(ime);
+	public void dodajTocko (Poteza tocka) {
+		tocke.add(tocka);
 	}
-	public void dodajTocke (Set<String> tocke_) {
+	public void dodajTocke (Set<Poteza> tocke_) {
 		tocke.addAll(tocke_);
 	}
-	public void dodajLib (String ime) {
-		libs.add(ime);
+	public void dodajLib (Poteza lib) {
+		libs.add(lib);
 	}
-	public void dodajLibs (Set<String> libs_) {
+	public void dodajLibs (Set<Poteza> libs_) {
 		libs.addAll(libs_);
 	}
 	public int moc () {
@@ -39,18 +39,15 @@ public class Graf {
 	}
 	public Graf kopiraj () {
 		Graf kopija = new Graf(this.ime, this.lastnik);
-		for (String tocka : tocke) {
-			kopija.tocke.add(tocka);
+		for (Poteza tocka : tocke) {
+			kopija.dodajTocko(tocka);
 		}
-		for (String lib : libs) {
+		for (Poteza lib : libs) {
 			kopija.libs.add(lib);
 		}
 		return kopija;
 	}
 	public String toString () {
-//		for (String x : libs) {
-//			System.out.print(x + ", ");
-//		}
 		return ime + ", lastnik: " + lastnik + ", stLibs: " + moc() + " <- graf ";
 	}
 }

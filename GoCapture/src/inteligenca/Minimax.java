@@ -1,14 +1,10 @@
 package inteligenca;
 
-import java.util.List;
 import java.util.Set;
 
 import logika.Igra;
 import logika.Igralec;
-
 import splosno.Poteza;
-
-//import inteligenca.OceniPozicijo;
 
 public class Minimax extends Inteligenca {
 	
@@ -42,8 +38,8 @@ public class Minimax extends Inteligenca {
 //			System.out.println(kopijaIgre.GRAFI);
 			int ocena;
 			switch (kopijaIgre.stanje()) {
-			case ZMAGA_O: ocena = (jaz == Igralec.CR ? ZMAGA : ZGUBA); break;
-			case ZMAGA_X: ocena = (jaz == Igralec.BE ? ZMAGA : ZGUBA); break;
+			case ZMAGA_CRNI: ocena = (jaz == Igralec.CRNI ? ZMAGA : ZGUBA); break;
+			case ZMAGA_BELI: ocena = (jaz == Igralec.BELI ? ZMAGA : ZGUBA); break;
 //			case ZMAGA_O: ocena = (jaz == Igralec.BE ? ZMAGA : ZGUBA); break;
 //			case ZMAGA_X: ocena = (jaz == Igralec.CR ? ZMAGA : ZGUBA); break;
 //			case NEODLOCENO: ocena = NEODLOC; break;

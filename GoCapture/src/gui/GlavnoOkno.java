@@ -45,7 +45,7 @@ public class GlavnoOkno extends JFrame implements ActionListener {
 	 */
 	public GlavnoOkno() {
 		
-		this.setTitle("Tic tac toe");
+		this.setTitle("Capture Go");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
 	
@@ -102,23 +102,23 @@ public class GlavnoOkno extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == igraClovekRacunalnik) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
-			Vodja.vrstaIgralca.put(Igralec.CR, VrstaIgralca.C); 
-			Vodja.vrstaIgralca.put(Igralec.BE, VrstaIgralca.R);
+			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.C); 
+			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.R);
 			Vodja.igramoNovoIgro();
 		} else if (e.getSource() == igraRacunalnikClovek) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
-			Vodja.vrstaIgralca.put(Igralec.CR, VrstaIgralca.R); 
-			Vodja.vrstaIgralca.put(Igralec.BE, VrstaIgralca.C);
+			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.R); 
+			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.C);
 			Vodja.igramoNovoIgro();
 		} else if (e.getSource() == igraClovekClovek) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
-			Vodja.vrstaIgralca.put(Igralec.CR, VrstaIgralca.C); 
-			Vodja.vrstaIgralca.put(Igralec.BE, VrstaIgralca.C);
+			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.C); 
+			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.C);
 			Vodja.igramoNovoIgro();
 		} else if (e.getSource() == igraRacunalnikRacunalnik) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
-			Vodja.vrstaIgralca.put(Igralec.CR, VrstaIgralca.R); 
-			Vodja.vrstaIgralca.put(Igralec.BE, VrstaIgralca.R);
+			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.R); 
+			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.R);
 			Vodja.igramoNovoIgro();
 		}
 	}
@@ -129,18 +129,17 @@ public class GlavnoOkno extends JFrame implements ActionListener {
 		}
 		else {
 			switch(Vodja.igra.stanje()) {
-//			case NEODLOCENO: status.setText("Neodločeno!"); break;
 			case V_TEKU: 
 				status.setText("Na potezi je " + Vodja.igra.naPotezi() + 
 						" - " + Vodja.vrstaIgralca.get(Vodja.igra.naPotezi())); 
 				break;
-			case ZMAGA_O: 
+			case ZMAGA_CRNI: 
 				status.setText("Zmagal je črni - " + 
-						Vodja.vrstaIgralca.get(Igralec.CR));
+						Vodja.vrstaIgralca.get(Igralec.CRNI));
 				break;
-			case ZMAGA_X: 
+			case ZMAGA_BELI: 
 				status.setText("Zmagal je beli - " + 
-						Vodja.vrstaIgralca.get(Igralec.BE));
+						Vodja.vrstaIgralca.get(Igralec.BELI));
 				break;
 			}
 		}

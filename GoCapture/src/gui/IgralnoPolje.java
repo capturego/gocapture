@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import vodja.Vodja;
 import logika.Igra;
 import logika.Polje;
+import logika.Stanje;
 import splosno.Poteza;
 
 /**
@@ -84,6 +85,9 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 
 		double w = squareWidth();
 
+		if ((Vodja.igra != null) && ((Vodja.igra.stanje_ == Stanje.ZMAGA_BELI) || (Vodja.igra.stanje_ == Stanje.ZMAGA_CRNI))) {
+			System.out.println("OK");
+		}
 		// če imamo zmagovalno terico, njeno ozadje pobarvamo
 //		Vrsta t = null;
 //		if (Vodja.igra != null) {t = Vodja.igra.zmagovalnaVrsta();}
@@ -114,14 +118,11 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 		Polje[][] plosca;;
 		if (Vodja.igra != null) {
 			plosca = Vodja.igra.getPlosca();
-//			for (Polje [] x : plosca) {
-//				System.out.println(Arrays.toString(x));
-//			}
 			for (int i = 0; i < Igra.N; i++) {
 				for (int j = 0; j < Igra.N; j++) {
 					switch(plosca[i][j]) {
-					case BE: paintX(g2, i, j); break;
-					case CR: paintO(g2, i, j); break;
+					case BELO: paintX(g2, i, j); break;
+					case CRNO: paintO(g2, i, j); break;
 					default: break;
 					}
 				}
