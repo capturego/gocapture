@@ -21,6 +21,6 @@ public class Inteligenca extends KdoIgra {
 		super("skupina_123");
 	}
 	public Poteza izberiPotezo (Igra igra) {
-		return new Alphabeta(3).izberiPotezo(igra);
+		return new Alphabeta(2).izberiPotezo(igra);
 	}
 }

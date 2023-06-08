@@ -18,7 +18,8 @@ public class Igra {
 	public Map<String, Graf> GRAFI;
 	public Set<Poteza> moznePoteze;
 	public Stanje stanje_;
-	public Graf ujetiGraf;
+	public Set<String> grafi0libs; 
+//	public Graf ujetiGraf;
 //	public Stanje stanje_ = Stanje.V_TEKU;
 	
 	// Igralno polje
@@ -27,7 +28,7 @@ public class Igra {
 		
 	// Igralec, ki je trenutno na potezi.
 	// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
-	private Igralec naPotezi;
+	public Igralec naPotezi;
 
 	/**
 	 * Nova igra, v začetni poziciji je prazna in na potezi je O.
@@ -37,6 +38,7 @@ public class Igra {
 		GRAFI = new HashMap<String, Graf>();
 		LIBS = new HashMap<Poteza, Liberty>();
 		moznePoteze = new HashSet<Poteza>();
+		grafi0libs = new HashSet<String>(); 
 		plosca = new Polje[N][N];
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -50,6 +52,7 @@ public class Igra {
 	public Igra(Igra igra) {
 		imenovalecGrafov = igra.imenovalecGrafov;
 		GRAFI = new HashMap<String, Graf>();
+		grafi0libs = new HashSet<String>(); 
 		for (String imeGrafa : igra.GRAFI.keySet()) {
 			this.GRAFI.put(imeGrafa, igra.GRAFI.get(imeGrafa).kopiraj());
 		}
@@ -88,27 +91,30 @@ public class Igra {
 		return Integer.toString(imenovalecGrafov++);
 	}
 
-	private HashSet<String> grafi0libs () {
-		HashSet<String> grafi0libs = new HashSet<String>();
+//	private HashSet<String> grafi0libs () {
+	private void grafi0libs () {
+		grafi0libs.clear();
+//		HashSet<String> grafi0libs = new HashSet<String>();
 //		HashSet<String> grafi0libs = null;
 		for (Graf graf : GRAFI.values()) {
 			if (graf.moc() == 0) {
 				grafi0libs.add(graf.ime);
 			}
 		}
-		return grafi0libs;
+//		return grafi0libs;
 	}
 	/**
 	 * @return trenutno stanje igre
 	 */
 	public Stanje stanje() {
 		// Ali imamo zmagovalca?
-		HashSet<String> grafi0libs = grafi0libs();
+//		HashSet<String> grafi0libs = grafi0libs();
+		grafi0libs();
 		if (!grafi0libs.isEmpty()) {
 			for (String nasprotnikovGraf : grafi0libs) {
 				Graf ujetiGraf_ = GRAFI.get(nasprotnikovGraf);
 				if (ujetiGraf_.lastnik == naPotezi) {
-					ujetiGraf = ujetiGraf_;
+//					ujetiGraf = ujetiGraf_;
 					if (naPotezi == Igralec.BELI) {return Stanje.ZMAGA_CRNI;}
 //					else if (naPotezi == Igralec.CR) {return Stanje.ZMAGA_X;}
 					else {return Stanje.ZMAGA_BELI;}
