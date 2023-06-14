@@ -4,13 +4,13 @@ import java.util.Set;
 
 import logika.Igra;
 import logika.Igralec;
+import logika.Tocka;
 import splosno.Poteza;
 
 public class Minimax extends Inteligenca {
 	
 	private static final int ZMAGA = Integer.MAX_VALUE; // vrednost zmage
 	private static final int ZGUBA = -ZMAGA;  // vrednost izgube
-//	private static final int NEODLOC = 0;  // vrednost neodločene igre	
 	
 	private int globina;
 	
@@ -28,21 +28,15 @@ public class Minimax extends Inteligenca {
 	public OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
 		System.out.println(jaz);
 		OcenjenaPoteza najboljsaPoteza = null;
-//		List<Poteza> moznePoteze = igra.poteze();
-		Set<Poteza> moznePoteze = igra.moznePoteze;
-		for (Poteza p: moznePoteze) {
+		Set<Tocka> moznePoteze = igra.moznePoteze;
+		for (Tocka p: moznePoteze) {
 			System.out.println(p);
 			Igra kopijaIgre = new Igra(igra);
 			kopijaIgre.odigraj(p);
-//			System.out.println(igra.GRAFI);
-//			System.out.println(kopijaIgre.GRAFI);
 			int ocena;
 			switch (kopijaIgre.stanje()) {
 			case ZMAGA_CRNI: ocena = (jaz == Igralec.CRNI ? ZMAGA : ZGUBA); break;
 			case ZMAGA_BELI: ocena = (jaz == Igralec.BELI ? ZMAGA : ZGUBA); break;
-//			case ZMAGA_O: ocena = (jaz == Igralec.BE ? ZMAGA : ZGUBA); break;
-//			case ZMAGA_X: ocena = (jaz == Igralec.CR ? ZMAGA : ZGUBA); break;
-//			case NEODLOCENO: ocena = NEODLOC; break;
 			default:
 				// nekdo je na potezi
 				if (globina == 1) ocena = OceniPozicijo.oceniPozicijo(kopijaIgre, jaz);

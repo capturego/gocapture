@@ -1,11 +1,11 @@
 package inteligenca;
 
 import java.util.Set;
-
 import logika.Igra;
 import logika.Igralec;
-import splosno.Poteza;
+import logika.Tocka;
 import logika.Graf;
+import splosno.Poteza;
 
 
 public class Alphabeta extends Inteligenca {
@@ -16,7 +16,6 @@ public class Alphabeta extends Inteligenca {
 	private int globina;
 	
 	public Alphabeta (int globina) {
-//		super("alphabeta globina " + globina);
 		this.globina = globina;
 	}
 	
@@ -31,13 +30,11 @@ public class Alphabeta extends Inteligenca {
 		// Če sem računalnik, maksimiramo oceno z začetno oceno ZGUBA
 		// Če sem pa človek, minimiziramo oceno z začetno oceno ZMAGA
 		if (igra.naPotezi() == jaz) {ocena = ZGUBA;} else {ocena = ZMAGA;}
-		Set<Poteza> moznePoteze = igra.moznePoteze;
-		Poteza kandidat = moznePoteze.iterator().next(); // Možno je, da se ne spremini vrednost kanditata. Zato ne more biti null.
+		Set<Tocka> moznePoteze = igra.moznePoteze;
+		Tocka kandidat = moznePoteze.iterator().next(); // Možno je, da se ne spremini vrednost kanditata. Zato ne more biti null.
 		for (Graf graf : igra.GRAFI.values()) {
 			if (graf.moc() == 1) {
-				Poteza lib = graf.libs.iterator().next();
-//				String[] xy = lib.split("-");
-//				Poteza poteza = lib;
+				Tocka lib = graf.libs.iterator().next();
 				if (graf.lastnik == jaz) {
 					return new OcenjenaPoteza (lib, ZGUBA/2);
 				}
@@ -46,22 +43,19 @@ public class Alphabeta extends Inteligenca {
 				}
 			}
 			else if (graf.moc() == 2 && graf.lastnik != jaz) {
-				Poteza lib = graf.libs.iterator().next();
-//				String[] xy = lib.split("-");
-//				Poteza poteza = new Poteza(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
+				Tocka lib = graf.libs.iterator().next();
 				Igra kopijaIgre = new Igra(igra);
 				kopijaIgre.odigraj(lib);
 				ocena = alphabetaPoteze (kopijaIgre, globina, alpha, beta, jaz).ocena;
 			}
 		}
-		for (Poteza p: moznePoteze) {
+		for (Tocka p: moznePoteze) {
 			Igra kopijaIgre = new Igra(igra);
 			kopijaIgre.odigraj(p);
 			int ocenap;
 			switch (kopijaIgre.stanje()) {
 			case ZMAGA_CRNI: ocenap = (jaz == Igralec.CRNI ? ZMAGA : ZGUBA); break;
 			case ZMAGA_BELI: ocenap = (jaz == Igralec.BELI ? ZMAGA : ZGUBA); break;
-//			case NEODLOCENO: ocenap = NEODLOC; break;
 			default:
 				// Nekdo je na potezi
 				if (globina == 1) ocenap = OceniPozicijo.oceniPozicijo(kopijaIgre, jaz);

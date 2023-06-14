@@ -1,10 +1,8 @@
 package inteligenca;
 
+import logika.Tocka;
 import splosno.Poteza;
 	
-//	private static final int ZMAGA = Integer.MAX_VALUE;  // vrednost zmage
-//	private static final int ZGUBA = -ZMAGA;  // vrednost izgube
-//	private static final int NEODLOC = 0;   // vrednost neodlocene igre
 
 public class OcenjenaPoteza {
 
@@ -13,6 +11,10 @@ public class OcenjenaPoteza {
 	
 	public OcenjenaPoteza (Poteza poteza, int ocena) {
 		this.poteza = poteza;
+		this.ocena = ocena;
+	}
+	public OcenjenaPoteza (Tocka poteza, int ocena) {
+		this.poteza = new Poteza(poteza.x, poteza.y);
 		this.ocena = ocena;
 	}
 	
