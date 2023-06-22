@@ -30,8 +30,9 @@ public class Alphabeta extends Inteligenca {
 		// Če sem računalnik, maksimiramo oceno z začetno oceno ZGUBA
 		// Če sem pa človek, minimiziramo oceno z začetno oceno ZMAGA
 		if (igra.naPotezi() == jaz) {ocena = ZGUBA;} else {ocena = ZMAGA;}
-		Set<Tocka> moznePoteze = igra.moznePoteze;
-		Tocka kandidat = moznePoteze.iterator().next(); // Možno je, da se ne spremini vrednost kanditata. Zato ne more biti null.
+//		Set<Tocka> moznePoteze = igra.moznePoteze;
+//		Tocka kandidat = moznePoteze.iterator().next(); // Možno je, da se ne spremni vrednost kanditata. Zato ne more biti null.
+		Tocka kandidat = igra.moznePoteze.iterator().next(); // Možno je, da se ne spremni vrednost kanditata. Zato ne more biti null.
 		for (Graf graf : igra.GRAFI.values()) {
 			if (graf.moc() == 1) {
 				Tocka lib = graf.libs.iterator().next();
@@ -49,7 +50,7 @@ public class Alphabeta extends Inteligenca {
 				ocena = alphabetaPoteze (kopijaIgre, globina, alpha, beta, jaz).ocena;
 			}
 		}
-		for (Tocka p: moznePoteze) {
+		for (Tocka p: igra.moznePoteze) {
 			Igra kopijaIgre = new Igra(igra);
 			kopijaIgre.odigraj(p);
 			int ocenap;

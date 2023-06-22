@@ -20,6 +20,12 @@ public class Liberty extends Tocka {
 	public void dodajGraf (String ime) {
 		grafi.add(ime);
 	}
+	public void odstraniGraf(String ime) {
+		grafi.remove(ime);
+	}
+	public boolean vsebujeGraf(String ime) {
+		return grafi.contains(ime);
+	}
 	public Liberty kopiraj () {
 		Liberty kopija = new Liberty(this.x, this.y);
 		for (String imeGrafa : grafi) {
