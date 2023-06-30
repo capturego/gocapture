@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import vodja.Vodja;
 import logika.Igra;
+import logika.Igralec;
 import logika.Polje;
 import logika.Stanje;
 import logika.Tocka;
@@ -81,9 +82,9 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 
 		double w = squareWidth();
 
-		if ((Vodja.igra != null) && ((Vodja.igra.stanje == Stanje.ZMAGA_BELI) || (Vodja.igra.stanje == Stanje.ZMAGA_CRNI))) {
-			System.out.println("OK");
-		}
+//		if ((Vodja.igra != null) && ((Vodja.igra.stanje == Stanje.ZMAGA_BELI) || (Vodja.igra.stanje == Stanje.ZMAGA_CRNI))) {
+//			System.out.println("OK");
+//		}
 		
 		// črte
 		g2.setColor(Color.BLACK);
@@ -114,7 +115,9 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 			}
 			for (String imeGrafa : Vodja.igra.grafi0libs) {
 				Graf ujetGraf = Vodja.igra.GRAFI.get(imeGrafa);
-				if (ujetGraf.lastnik == Vodja.igra.naPotezi) {
+//				if (ujetGraf.lastnik == Vodja.igra.naPotezi) {
+				if ((ujetGraf.lastnik == Igralec.CRNI && Vodja.igra.stanje() == Stanje.ZMAGA_BELI) ||
+					(ujetGraf.lastnik == Igralec.BELI && Vodja.igra.stanje() == Stanje.ZMAGA_CRNI)) {
 					for (Tocka tocka : ujetGraf.tocke) {
 						obkrozi(g2, tocka.x, tocka.y);
 					}
@@ -129,8 +132,8 @@ public class IgralnoPolje extends JPanel implements MouseListener {
 			int w = (int)(squareWidth());
 			int x = e.getX();
 			int y = e.getY();
-			int i = (int) (x - .25*w) / w ;
-			int j = (int) (y - .25*w) / w ;
+			int i = (int) (x - .5*w) / w ;
+			int j = (int) (y - .5*w) / w ;
 			if (0 <= i && i < Igra.N &&
 				0 <= j && j < Igra.N) {
 				Vodja.igrajClovekovoPotezo (new Tocka(i, j));

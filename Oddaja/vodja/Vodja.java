@@ -26,6 +26,7 @@ public class Vodja implements Serializable {
 	public static boolean clovekNaVrsti = false;
 	public boolean clovekNaVrsti_;
 	
+	public static int tezavnost;
 	public static Inteligenca racunalnikovaInteligenca = new Inteligenca();
 		
 	public Vodja () {
@@ -69,7 +70,13 @@ public class Vodja implements Serializable {
 		SwingWorker<Poteza, Void> worker = new SwingWorker<Poteza, Void>() {
 			@Override
 			protected Poteza doInBackground() {
-				Poteza poteza = racunalnikovaInteligenca.izberiPotezo(igra);
+				Poteza poteza;
+				if (tezavnost > 0) {
+					poteza = racunalnikovaInteligenca.izberiPotezo(igra, tezavnost);
+				}
+				else {
+					poteza = racunalnikovaInteligenca.izberiPotezo(igra);
+				}
 				return poteza;
 			}
 			@Override
@@ -80,7 +87,7 @@ public class Vodja implements Serializable {
 				}
 				catch (Exception e) {}
 				if (igra == zacetnaIgra) {
-					igra.odigraj(new Tocka(poteza.x(), poteza.y()));
+					igra.odigraj(new Tocka(poteza));
 					igramo();
 				}
 			}

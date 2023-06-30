@@ -11,7 +11,7 @@ public class Graf implements Serializable {
 	
 	static final long serialVersionUID = 1L;
 
-	protected String ime;
+	public String ime;
 	/**
 	 * Lastnik grafa je eden od igralcev
 	 */

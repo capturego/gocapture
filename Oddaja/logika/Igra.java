@@ -29,6 +29,9 @@ public class Igra implements Serializable {
 	// Grafi brez svoboščin
 	public Set<String> grafi0libs; 
 
+	// Grafi z eno svoboščino 
+	public Set<String> grafi1libs; 
+
 	// Velikost igralne pološče je N x N.
 	public static final int N = 9;
 	
@@ -53,6 +56,7 @@ public class Igra implements Serializable {
 		LIBS = new HashMap<Tocka, Liberty>();
 		moznePoteze = new HashSet<Tocka>();
 		grafi0libs = new HashSet<String>(); 
+		grafi1libs = new HashSet<String>(); 
 		plosca = new Polje[N][N];
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -71,6 +75,7 @@ public class Igra implements Serializable {
 		imenovalecGrafov = igra.imenovalecGrafov;
 		GRAFI = new HashMap<String, Graf>();
 		grafi0libs = new HashSet<String>(); 
+		grafi1libs = new HashSet<String>(); 
 		for (String imeGrafa : igra.GRAFI.keySet()) {
 			GRAFI.put(imeGrafa, igra.GRAFI.get(imeGrafa).kopiraj());
 		}
@@ -121,6 +126,14 @@ public class Igra implements Serializable {
 			}
 		}
 	}
+	private void grafi1libs () {
+		grafi1libs.clear();
+		for (Graf graf : GRAFI.values()) {
+			if (graf.moc() == 1) {
+				grafi1libs.add(graf.ime);
+			}
+		}
+	}
 
 	/**
 	 * @return trenutno stanje igre
@@ -128,6 +141,7 @@ public class Igra implements Serializable {
 	public Stanje stanje() {
 		// Ali imamo poraženca?
 		grafi0libs();
+		grafi1libs();
 		if (!grafi0libs.isEmpty()) {
 			for (String nasprotnikovGraf : grafi0libs) {
 				Graf ujetiGraf_ = GRAFI.get(nasprotnikovGraf);
@@ -153,8 +167,7 @@ public class Igra implements Serializable {
 	 * @return true, če je bila poteza uspešno odigrana
 	 */
 	public boolean odigraj(Tocka poteza) {
-		int x = poteza.x;
-		int y = poteza.y;
+		int x = poteza.x; int y = poteza.y;
 		// ob vsaki odigrani potezi se ustvari nov ali spremeni najmanj en obstoječ graf
 		String imeGrafa = imenujGraf();
 		Graf bodocGraf = new Graf(imeGrafa, naPotezi);
@@ -216,18 +229,21 @@ public class Igra implements Serializable {
 					}
 				}
 			}
-			// če je graf od nasprotnika 
-			else {
+			else { // če je graf od nasprotnika 
 				GRAFI.put(imeObstojecega, obstojecGraf);
 			}
 		}
-		for (Tocka sosed : sosedi) {  // preverimo vse sosede
+		for (Tocka sosed : sosedi) {  // iz sosedi smo že odstranili odigrane poteze
 			plosca[sosed.x][sosed.y] = Polje.LIBERTY;
+			// sosed je lahko že svoboščina, to preverimo
 			Liberty lib = LIBS.containsKey(sosed) ? LIBS.get(sosed) : new Liberty(sosed.x, sosed.y);
+			// graf in svoboščina morata vedeti en za drugega
 			bodocGraf.dodajLib(sosed);
 			lib.dodajGraf(imeGrafa);
+			// igra mora vedeti za te nove svoboščine
 			LIBS.put(sosed, lib);
 		}
+		// Končamo beleženje spremembe v igri
 		bodocGraf.dodajTocko(poteza);
 		GRAFI.put(imeGrafa, bodocGraf);
 		LIBS.remove(poteza);

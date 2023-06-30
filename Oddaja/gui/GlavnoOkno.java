@@ -19,10 +19,12 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import vodja.Vodja;
 import vodja.VrstaIgralca;
 import logika.Igralec;
+import logika.Tezavnost;
 
 
 /**
@@ -53,6 +55,7 @@ public class GlavnoOkno extends JFrame implements ActionListener {
 	// Za shranjevanje in nalaganje iger
 	private JFileChooser FC;
 
+//	private String[] tezavnosti = {"srednja", "lahka", "prelahka"};;
 	/**
 	 * Ustvari novo glavno okno in prični igrati igro.
 	 */
@@ -128,11 +131,13 @@ public class GlavnoOkno extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == igraClovekRacunalnik) {
+			Vodja.tezavnost = dolociTezavnost();
 			Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.C); 
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.R);
 			Vodja.igramoNovoIgro();
 		} else if (e.getSource() == igraRacunalnikClovek) {
+			Vodja.tezavnost = dolociTezavnost();
 			Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.R); 
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.C);
@@ -205,5 +210,16 @@ public class GlavnoOkno extends JFrame implements ActionListener {
 			}
 		}
 		polje.repaint();
+	}
+	private int dolociTezavnost () {
+		String s = (String)JOptionPane.showInputDialog(
+		                    this,
+		                    "Izberite težavnost igre, privzeta je Srednja:",
+		                    "Težavnost",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                    null,
+		                    Tezavnost.seznam(),
+		                    null);
+		return Tezavnost.ostevilci(s);
 	}
 }
